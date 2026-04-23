@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ShopSense Dashboard</title>
+
+<!-- Reliable Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+    margin: 0;
+    padding: 20px;
+}
+h1 {
+    text-align: center;
+}
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+}
+.full {
+    grid-column: span 2;
+}
+input, button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+}
+button {
+    background: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+.result {
+    margin-top: 15px;
+    font-size: 18px;
+    font-weight: bold;
+}
+.error {
+    color: red;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🛍 ShopSense Dashboard</h1>
+
+<div class="container">
+
+<div class="card">
+<h3>Key Metrics</h3>
+<p>Average Income: ₹50,000</p>
+<p>Average Spending: ₹25,000</p>
+</div>
+
+<div class="card">
+<h3>Predict Spending</h3>
+<input type="number" id="age" placeholder="Age">
+<input type="number" id="income" placeholder="Annual Income">
+<input type="number" id="freq" placeholder="Purchase Frequency">
+<button onclick="predict()">Predict</button>
+<div class="result" id="result"></div>
+</div>
+
+<div class="card full">
+<h3>Spending by Age Group</h3>
+<canvas id="chart1"></canvas>
+<div id="chart1Error" class="error"></div>
+</div>
+
+<div class="card full">
+<h3>Spending Trend</h3>
+<canvas id="chart2"></canvas>
+<div id="chart2Error" class="error"></div>
+</div>
+
+</div>
+
+<script>
+window.onload = function () {
+
+    try {
+        const ctx1 = document.getElementById('chart1');
+        if (!ctx1) throw "Chart1 canvas not found";
+
+        new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: ['18-25', '26-35', '36-50', '50+'],
+                datasets: [{
+                    label: 'Average Spending',
+                    data: [15000, 30000, 25000, 20000]
+                }]
+            }
+        });
+    } catch (e) {
+        document.getElementById("chart1Error").innerText = "Chart 1 Error: " + e;
+    }
+
+    try {
+        const ctx2 = document.getElementById('chart2');
+        if (!ctx2) throw "Chart2 canvas not found";
+
+        new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: ['Low', 'Medium', 'High'],
+                datasets: [{
+                    label: 'Spending Trend',
+                    data: [10000, 25000, 40000]
+                }]
+            }
+        });
+    } catch (e) {
+        document.getElementById("chart2Error").innerText = "Chart 2 Error: " + e;
+    }
+
+};
+
+function predict() {
+    let age = document.getElementById("age").value;
+    let income = document.getElementById("income").value;
+    let freq = document.getElementById("freq").value;
+
+    if(age && income && freq){
+        let result = (0.5 * income) + (100 * freq) - (10 * age);
+        document.getElementById("result").innerHTML = "Estimated Spending: ₹ " + result.toFixed(2);
+    } else {
+        document.getElementById("result").innerHTML = "Please fill all fields";
+    }
+}
+</script>
+
+</body>
+</html>
